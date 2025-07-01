@@ -24,25 +24,20 @@ let cachedProducts: Product[] | null = null;
  */
 export const getAllProducts = (): ProductWithSearch[] => {
   if (cachedProducts) return cachedProducts;
-  try {
-    // check if file exists or not
-    if (!fs.existsSync(PRODUCTS_JSON_PATH)) {
-      throw new Error(`Product JSON file not found at path: ${PRODUCTS_JSON_PATH}`);
-    }
-    const fileContents = fs.readFileSync(PRODUCTS_JSON_PATH, 'utf-8');
-    if (!fileContents) {
-      throw new Error(`Product JSON file is empty at path: ${PRODUCTS_JSON_PATH}`);
-    }
-    // Cached the loaded products
-    cachedProducts = JSON.parse(fileContents) as Product[];
-    // Optimise the products object for search filter with adding
-    // _search field with precomputed LowerCase name at load time
-    cachedProducts = cachedProducts.map((p) => ({ ...p, _search: p.name.toLowerCase() }));
-    return cachedProducts as ProductWithSearch[];
-  } catch (error) {
-    console.log(`Error checking product JSON file existence`, error);
-    return [];
+  // check if file exists or not
+  if (!fs.existsSync(PRODUCTS_JSON_PATH)) {
+    throw new Error(`Product JSON file not found at path: ${PRODUCTS_JSON_PATH}`);
   }
+  const fileContents = fs.readFileSync(PRODUCTS_JSON_PATH, 'utf-8');
+  if (!fileContents) {
+    throw new Error(`Product JSON file is empty at path: ${PRODUCTS_JSON_PATH}`);
+  }
+  // Cached the loaded products
+  cachedProducts = JSON.parse(fileContents) as Product[];
+  // Optimise the products object for search filter with adding
+  // _search field with precomputed LowerCase name at load time
+  cachedProducts = cachedProducts.map((p) => ({ ...p, _search: p.name.toLowerCase() }));
+  return cachedProducts as ProductWithSearch[];
 };
 
 /**

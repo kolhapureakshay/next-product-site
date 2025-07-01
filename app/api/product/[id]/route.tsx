@@ -12,16 +12,19 @@ type Context = {
  * return a single product by ID
  */
 export async function GET(_: NextRequest, context: Context) {
-  const { id } = context.params;
+  try {
+    const { id } = context.params;
 
-  if (!id) {
-    return NextResponse.json({ error: 'Product Id is required' }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ error: 'Product Id is required' }, { status: 400 });
+    }
+
+    const product = getProductById(id);
+    if (!product) {
+      return NextResponse.json({ message: 'Product not found' }, { status: 404 });
+    }
+    return NextResponse.json({ data: product });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
-
-  const product = getProductById(id);
-  if (!product) {
-    return NextResponse.json({ message: 'Product not found' }, { status: 404 });
-  }
-
-  return NextResponse.json({ data: product });
 }
