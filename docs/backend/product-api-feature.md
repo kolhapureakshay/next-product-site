@@ -35,10 +35,12 @@ This project is a web application that provides a paginated search functionality
    ```
 
 3. Start the development server:
+
    ```bash
    pnpm dev
 
    ```
+
 4. Open your browser and navigate to http://localhost:3000
 
 ## Project Structure
